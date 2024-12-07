@@ -40,6 +40,10 @@ func (node *Item) GetNext() *Item {
 	return node.next
 }
 
+func (node *Item) GetValue() int {
+	return node.value
+}
+
 func CreateNewItem(val int) *Item {
 	// panic("unimplemented")
 	var a = Item{value: val | 0, next: nil}
