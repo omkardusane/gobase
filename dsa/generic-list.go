@@ -9,10 +9,10 @@ type GNode[T any] struct {
 type GList[T any] struct {
 	first  *GNode[T]
 	last   *GNode[T]
-	length int32
+	length int
 }
 
-func CreateGList[T any](item T) *GList[T] {
+func CreateGList[T any]() *GList[T] {
 	return &GList[T]{length: 0, first: nil, last: nil}
 }
 
@@ -40,9 +40,31 @@ func (list *GList[T]) Push(nodeVal T) {
 func (list *GList[T]) Pop() T {
 	gNode := list.last
 	if gNode != nil {
+		if list.length == 1 {
+			list.first = nil
+			list.last = nil
+		} else {
+			var idx int = 0
+			var last *GNode[T] = list.first
+			for idx != (list.length - 2) {
+				last = last.next
+				idx++
+			}
+			list.last = last
+			list.last.next = nil
+		}
+		list.length--
 		return gNode.value
 	} else {
 		var zeroVal T
 		return zeroVal
 	}
+}
+
+func GetNodeAtIdx() {
+	// tbd
+}
+
+func (list *GList[T]) GetLength() int {
+	return list.length
 }

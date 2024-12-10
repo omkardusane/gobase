@@ -32,9 +32,9 @@ func playlist1() {
 	i3.AddNext(137)
 
 	fmt.Println("Printing list")
-	i1.ForEach(func(val int, idx int) {
-		fmt.Printf("%d : %d \n", idx, val)
-	})
+	// i1.ForEach(func(val int, idx int) {
+	// 	fmt.Printf("%d : %d \n", idx, val)
+	// })
 }
 
 func genList() {
@@ -60,5 +60,5 @@ func genList() {
 		}
 	}
 	fmt.Println("We are done. Printing the list again")
-	l2Starter.PrintAll()
+	// l2Starter.PrintAll()
 }
