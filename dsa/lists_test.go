@@ -11,9 +11,9 @@ func TestCreation(t *testing.T) {
 	}
 	t.Log("TestCreation passed successfully!")
 	count := 0
-	l1.ForEach(func(itemVal int, idx int) {
-		count++
-	})
+	// l1.ForEach(func(itemVal int, idx int) {
+	// 	count++
+	// })
 	if count != 1 {
 		t.Fatal("count is incorrect")
 	}
@@ -27,5 +27,5 @@ func TestAdd(t *testing.T) {
 		t.Fatal("last value does not match")
 	}
 	t.Log("TestAdd passed successfully!")
-	l1.PrintAll()
+	// l1.PrintAll()
 }

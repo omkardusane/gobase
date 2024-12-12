@@ -12,8 +12,15 @@ type BinaryTree[T any] struct {
 	depth int
 }
 
+func CreateGTreeNode[T any]() *GTreeNode[T] {
+	return &GTreeNode[T]{
+		left:  nil,
+		right: nil,
+	}
+}
+
 func CreateBinaryTree[T any]() *BinaryTree[T] {
-	return &BinaryTree[T]{depth: 0}
+	return &BinaryTree[T]{depth: 0, base: CreateGTreeNode[T]()}
 }
 
 func (tree *BinaryTree[T]) Traverse(reader func(nodeValue T, idx int)) {
@@ -25,7 +32,8 @@ func (cursor *GTreeNode[T]) Traverse(reader func(nodeValue T, idx int)) {
 	reader(cursor.value, cursor.index)
 	if cursor.left != nil {
 		cursor.left.Traverse(reader)
-	} else if cursor.right != nil {
+	}
+	if cursor.right != nil {
 		cursor.right.Traverse(reader)
 	}
 }
@@ -57,13 +65,29 @@ func (node *GTreeNode[T]) Find(index int) *GTreeNode[T] {
 	}
 }
 
-func (tree *BinaryTree[T]) Insert(index int, value T) {
-	var cursor *GTreeNode[T]
-	if cursor.index == index {
-		// matched
-	} else if cursor.left != nil {
+func (tree *BinaryTree[T]) Insert(value T, index int) {
+	var cursor *GTreeNode[T] = tree.base
+	cursor.Insert(value, index)
+}
 
-	} else if cursor.right != nil {
-
+func (cursor *GTreeNode[T]) Insert(value T, index int) {
+	var nilIdx int
+	if cursor.index == nilIdx {
+		cursor.value = value
+		cursor.index = index
+	} else {
+		if cursor.index >= index {
+			// we go left
+			if cursor.left == nil {
+				cursor.left = CreateGTreeNode[T]()
+			}
+			cursor.left.Insert(value, index)
+		} else {
+			// we go right
+			if cursor.right == nil {
+				cursor.right = CreateGTreeNode[T]()
+			}
+			cursor.right.Insert(value, index)
+		}
 	}
 }
