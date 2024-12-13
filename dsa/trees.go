@@ -28,14 +28,40 @@ func (tree *BinaryTree[T]) Traverse(reader func(nodeValue T, idx int)) {
 }
 
 func (cursor *GTreeNode[T]) Traverse(reader func(nodeValue T, idx int)) {
-	// emit this cursor
-	reader(cursor.value, cursor.index)
+	// in-order dfs
 	if cursor.left != nil {
 		cursor.left.Traverse(reader)
 	}
+	reader(cursor.value, cursor.index)
 	if cursor.right != nil {
 		cursor.right.Traverse(reader)
 	}
+}
+
+func (tree *BinaryTree[T]) BfsTraverse(reader func(nodeValue T, depth int)) {
+	currentDepth := 0
+	maxDepth := 100
+	reader(tree.base.value, currentDepth)
+	tree.base.BfsTraverse(currentDepth+1, maxDepth, reader)
+}
+
+func (cursor *GTreeNode[T]) BfsTraverse(currentDepth int, maxDepth int, reader func(nodeValue T, depth int)) {
+	thisDepth := CreateGList[*GTreeNode[T]]()
+	if cursor.left != nil {
+		reader(cursor.left.GetValue(), currentDepth)
+		thisDepth.Push(cursor.left)
+	}
+	if cursor.right != nil {
+		reader(cursor.right.GetValue(), currentDepth)
+		thisDepth.Push(cursor.right)
+	}
+	currentDepth = currentDepth + 1
+	// if maxDepth == currentDepth {
+	// 	return
+	// }
+	thisDepth.ForEach(func(deeperCursor *GTreeNode[T], idx int) {
+		deeperCursor.BfsTraverse(currentDepth, maxDepth, reader)
+	})
 }
 
 func (tree *BinaryTree[T]) Find(index int) *GTreeNode[T] {
@@ -90,4 +116,8 @@ func (cursor *GTreeNode[T]) Insert(value T, index int) {
 			cursor.right.Insert(value, index)
 		}
 	}
+}
+
+func (node *GTreeNode[T]) GetValue() T {
+	return node.value
 }
