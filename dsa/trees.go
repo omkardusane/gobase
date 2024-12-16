@@ -1,5 +1,7 @@
 package dsa
 
+import "fmt"
+
 type GTreeNode[T any] struct {
 	value T
 	index int
@@ -48,10 +50,14 @@ func (tree *BinaryTree[T]) BfsTraverse(reader func(nodeValue T, depth int)) {
 func (cursor *GTreeNode[T]) BfsTraverse(currentDepth int, maxDepth int, reader func(nodeValue T, depth int)) {
 	thisDepth := CreateGList[*GTreeNode[T]]()
 	if cursor.left != nil {
+		fmt.Print("node ", cursor.GetValue())
+		fmt.Print("-child-Left-", cursor.left.GetValue())
 		reader(cursor.left.GetValue(), currentDepth)
 		thisDepth.Push(cursor.left)
 	}
 	if cursor.right != nil {
+		fmt.Print("node ", cursor.GetValue())
+		fmt.Print("-child-Right-", cursor.right.GetValue())
 		reader(cursor.right.GetValue(), currentDepth)
 		thisDepth.Push(cursor.right)
 	}
@@ -62,6 +68,54 @@ func (cursor *GTreeNode[T]) BfsTraverse(currentDepth int, maxDepth int, reader f
 	thisDepth.ForEach(func(deeperCursor *GTreeNode[T], idx int) {
 		deeperCursor.BfsTraverse(currentDepth, maxDepth, reader)
 	})
+}
+
+func (tree *BinaryTree[T]) Rebalance() {
+
+}
+
+func (cursor *GTreeNode[T]) Rebalance() {
+
+}
+
+func (tree *BinaryTree[T]) getRoot() *GTreeNode[T] {
+	return tree.base
+}
+
+func (cursor *GTreeNode[T]) calcBalance() int {
+	// gap := cursor.left.measureDepth() - cursor.right.measureDepth()
+	// return gap
+	var hasChildren, hasLeft, hasRight = cursor.hasChildren()
+	var leftDiff = 0
+	var rightDiff = 0
+	if !hasChildren {
+		return 0
+	}
+	if hasLeft {
+		leftDiff = cursor.left.calcBalance()
+	}
+	if hasRight {
+		rightDiff = cursor.right.calcBalance()
+	}
+	return rightDiff - leftDiff
+}
+
+func (cursor *GTreeNode[T]) measureDepth() int {
+	var depth int = 1
+	var leftDepth int = 0
+	var rightDepth int = 0
+	if cursor.left != nil {
+		leftDepth = cursor.measureDepth()
+	}
+	if cursor.right != nil {
+		rightDepth = cursor.measureDepth()
+	}
+	if leftDepth > rightDepth {
+		depth += leftDepth
+	} else {
+		depth += rightDepth
+	}
+	return depth
 }
 
 func (tree *BinaryTree[T]) Find(index int) *GTreeNode[T] {
@@ -120,4 +174,10 @@ func (cursor *GTreeNode[T]) Insert(value T, index int) {
 
 func (node *GTreeNode[T]) GetValue() T {
 	return node.value
+}
+
+func (node *GTreeNode[T]) hasChildren() (bool, bool, bool) {
+	var l = node.left != nil
+	var r = node.right != nil
+	return l && r, l, r
 }
