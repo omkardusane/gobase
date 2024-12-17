@@ -26,4 +26,13 @@ func ExecPlayList4() {
 		counter++
 		fmt.Printf("\n %d: { depth: %d, val : %s}, ", counter, depth, nodeValue)
 	})
+	fmt.Print("\n\n")
+	treeBalance := tr1.GetRoot().CalcBalance()
+	fmt.Println("\n Balance in tree", treeBalance)
+
+	// treeBalance := tr1.GetRoot().Left().CalcBalance()
+	// fmt.Println("\n Balance in tree", treeBalance)
+
+	// treeBalance := tr1.GetRoot().CalcBalance()
+	// fmt.Println("\n Balance in tree", treeBalance)
 }

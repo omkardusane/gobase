@@ -61,6 +61,16 @@ func (list *GList[T]) Pop() T {
 	}
 }
 
+func (list *GList[T]) GetElemAt(idx int) T {
+	cursor := list.first
+	idx--
+	for idx == 0 {
+		cursor = cursor.next
+		idx--
+	}
+	return cursor.value
+}
+
 func GetNodeAtIdx() {
 	// tbd
 }

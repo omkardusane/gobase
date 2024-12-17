@@ -26,6 +26,7 @@ func CreateBinaryTree[T any]() *BinaryTree[T] {
 }
 
 func (tree *BinaryTree[T]) Traverse(reader func(nodeValue T, idx int)) {
+	// inorder traversal
 	tree.base.Traverse(reader)
 }
 
@@ -71,32 +72,77 @@ func (cursor *GTreeNode[T]) BfsTraverse(currentDepth int, maxDepth int, reader f
 }
 
 func (tree *BinaryTree[T]) Rebalance() {
+	// var inOrderList *GList[*GTreeNode[T]]
+	var inOrderList *GList[int]
+	tree.Traverse(func(nodeValue T, idx int) {
+		inOrderList.Push(idx)
+	})
 
+	var mid int = (int)(inOrderList.length / 2)
+	midItm := inOrderList.GetElemAt(mid)
+
+	newTree := CreateBinaryTree[T]()
+	newTree.Insert(tree.FindElemAt(midItm), midItm)
+	// wip
 }
 
 func (cursor *GTreeNode[T]) Rebalance() {
 
 }
 
-func (tree *BinaryTree[T]) getRoot() *GTreeNode[T] {
+func (tree *BinaryTree[T]) GetRoot() *GTreeNode[T] {
 	return tree.base
 }
 
-func (cursor *GTreeNode[T]) calcBalance() int {
+func (tree *BinaryTree[T]) FindElemAt(idx int) T {
+	cursor := tree.base
+	return cursor.FindElemAt(idx)
+}
+
+func (cursor *GTreeNode[T]) FindElemAt(idx int) T {
+	var nilVal int
+	var nilT T
+	if cursor.index == nilVal {
+		return nilT
+	}
+	if cursor.index == idx {
+		return cursor.value
+	} else if cursor.index > idx && cursor.left != nil {
+		//  go find in left subtree
+		return cursor.left.FindElemAt(idx)
+	} else if cursor.index < idx && cursor.right != nil {
+		//  go find in right subtree
+		return cursor.right.FindElemAt(idx)
+	}
+	return nilT
+}
+
+func (cursor *GTreeNode[T]) calcDepthDiff() int {
+	var leftDepth int = 0
+	var rightDepth int = 0
+	if cursor.left != nil {
+		leftDepth = cursor.measureDepth()
+	}
+	if cursor.right != nil {
+		rightDepth = cursor.measureDepth()
+	}
+	return rightDepth - leftDepth
+}
+
+//  this function is wip
+func (cursor *GTreeNode[T]) CalcBalance() int {
 	// gap := cursor.left.measureDepth() - cursor.right.measureDepth()
 	// return gap
-	var hasChildren, hasLeft, hasRight = cursor.hasChildren()
+	var hasLeft, hasRight = cursor.hasChildren()
 	var leftDiff = 0
 	var rightDiff = 0
-	if !hasChildren {
-		return 0
-	}
 	if hasLeft {
-		leftDiff = cursor.left.calcBalance()
+		leftDiff = cursor.left.CalcBalance() + 1
 	}
 	if hasRight {
-		rightDiff = cursor.right.calcBalance()
+		rightDiff = cursor.right.CalcBalance() + 1
 	}
+	fmt.Println("\n Balance at ", cursor.value, leftDiff, rightDiff, "is", rightDiff-leftDiff)
 	return rightDiff - leftDiff
 }
 
@@ -176,8 +222,8 @@ func (node *GTreeNode[T]) GetValue() T {
 	return node.value
 }
 
-func (node *GTreeNode[T]) hasChildren() (bool, bool, bool) {
-	var l = node.left != nil
-	var r = node.right != nil
-	return l && r, l, r
+func (node *GTreeNode[T]) hasChildren() (bool, bool) {
+	var l = (node.left != nil)
+	var r = (node.right != nil)
+	return l, r
 }
