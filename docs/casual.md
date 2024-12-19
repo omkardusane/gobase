@@ -14,3 +14,9 @@ go: warning: ignoring go.mod in $GOPATH N:/omkar-code/gobase
 ok      gobase_om/dsa   0.023s  coverage: 95.2% of statements
 
 ```
+
+### Todo:
+
+- [ ] Finish AVL Tree
+- [ ] Implement Red Black Tree
+- [ ] Implement Unit tests
