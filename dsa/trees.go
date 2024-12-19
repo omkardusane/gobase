@@ -202,23 +202,72 @@ func (cursor *GTreeNode[T]) Rebalance() {
 }
 
 // Adding capabilities of AVL tree
-func (cursor *GTreeNode[T]) RebalanceAVL() {
+func (tree *BinaryTree[T]) RebalanceAVL() {
+	var newRoot = tree.base.RebalanceAVL()
+	tree.base = newRoot
+}
 
+func (cursor *GTreeNode[T]) RebalanceAVL() *GTreeNode[T] {
+	if cursor == nil {
+		return nil
+	}
+	var diff int = cursor.calcDepthDiff()
+	if diff > 1 {
+		// rotateLeft
+		cursor = cursor.rotateLeft()
+	}
+	if diff < -1 {
+		// rotateRight
+		cursor = cursor.rotateRight()
+	}
+	var hasLeft, hasRight = cursor.hasChildren()
+	if hasLeft {
+		cursor.left.RebalanceAVL()
+	}
+	if hasRight {
+		cursor.right.RebalanceAVL()
+	}
+	// return cursor
+}
+
+func (root *GTreeNode[T]) rotateLeft() *GTreeNode[T] {
+
+}
+
+func (root *GTreeNode[T]) rotateRight() *GTreeNode[T] {
+	var t1, t2, t3, t4 *GTreeNode[T]
+	// leftNode = root.left
+	// rightNode = root.right
+	t1 = root.left.left
+	t2 = root.left.right.left
+	t3 = root.left.right.right
+	t4 = root.right
+
+	newRoot := root.left.right
+	newRoot.left = root.left
+	newRoot.right = root
+
+	newRoot.left.left = t1
+	newRoot.left.right = t2
+	newRoot.right.left = t3
+	newRoot.right.right = t4
+	return newRoot
 }
 
 func (cursor *GTreeNode[T]) calcDepthDiff() int {
 	var leftDepth int = 0
 	var rightDepth int = 0
-	if cursor.left != nil {
+	var hasLeft, hasRight = cursor.hasChildren()
+	if hasLeft {
 		leftDepth = cursor.measureDepth()
 	}
-	if cursor.right != nil {
+	if hasRight {
 		rightDepth = cursor.measureDepth()
 	}
 	return rightDepth - leftDepth
 }
 
-//  this function is useless
+//  this function is incapable of solving for its purpose as of now
 func (cursor *GTreeNode[T]) CalcBalance() int {
 	// gap := cursor.left.measureDepth() - cursor.right.measureDepth()
 	// return gap
