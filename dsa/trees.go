@@ -5,6 +5,7 @@ import "fmt"
 type GTreeNode[T any] struct {
 	value T
 	index int
+	depth int
 	left  *GTreeNode[T]
 	right *GTreeNode[T]
 }
@@ -71,25 +72,6 @@ func (cursor *GTreeNode[T]) BfsTraverse(currentDepth int, maxDepth int, reader f
 	})
 }
 
-func (tree *BinaryTree[T]) Rebalance() {
-	// var inOrderList *GList[*GTreeNode[T]]
-	var inOrderList *GList[int]
-	tree.Traverse(func(nodeValue T, idx int) {
-		inOrderList.Push(idx)
-	})
-
-	var mid int = (int)(inOrderList.length / 2)
-	midItm := inOrderList.GetElemAt(mid)
-
-	newTree := CreateBinaryTree[T]()
-	newTree.Insert(tree.FindElemAt(midItm), midItm)
-	// wip
-}
-
-func (cursor *GTreeNode[T]) Rebalance() {
-
-}
-
 func (tree *BinaryTree[T]) GetRoot() *GTreeNode[T] {
 	return tree.base
 }
@@ -115,35 +97,6 @@ func (cursor *GTreeNode[T]) FindElemAt(idx int) T {
 		return cursor.right.FindElemAt(idx)
 	}
 	return nilT
-}
-
-func (cursor *GTreeNode[T]) calcDepthDiff() int {
-	var leftDepth int = 0
-	var rightDepth int = 0
-	if cursor.left != nil {
-		leftDepth = cursor.measureDepth()
-	}
-	if cursor.right != nil {
-		rightDepth = cursor.measureDepth()
-	}
-	return rightDepth - leftDepth
-}
-
-//  this function is wip
-func (cursor *GTreeNode[T]) CalcBalance() int {
-	// gap := cursor.left.measureDepth() - cursor.right.measureDepth()
-	// return gap
-	var hasLeft, hasRight = cursor.hasChildren()
-	var leftDiff = 0
-	var rightDiff = 0
-	if hasLeft {
-		leftDiff = cursor.left.CalcBalance() + 1
-	}
-	if hasRight {
-		rightDiff = cursor.right.CalcBalance() + 1
-	}
-	fmt.Println("\n Balance at ", cursor.value, leftDiff, rightDiff, "is", rightDiff-leftDiff)
-	return rightDiff - leftDiff
 }
 
 func (cursor *GTreeNode[T]) measureDepth() int {
@@ -226,4 +179,62 @@ func (node *GTreeNode[T]) hasChildren() (bool, bool) {
 	var l = (node.left != nil)
 	var r = (node.right != nil)
 	return l, r
+}
+
+// Rebalance Traditionally
+func (tree *BinaryTree[T]) Rebalance() {
+	// var inOrderList *GList[*GTreeNode[T]]
+	var inOrderList *GList[int]
+	tree.Traverse(func(nodeValue T, idx int) {
+		inOrderList.Push(idx)
+	})
+
+	var mid int = (int)(inOrderList.length / 2)
+	midItm := inOrderList.GetElemAt(mid)
+
+	newTree := CreateBinaryTree[T]()
+	newTree.Insert(tree.FindElemAt(midItm), midItm)
+	// wip
+}
+
+func (cursor *GTreeNode[T]) Rebalance() {
+
+}
+
+// Adding capabilities of AVL tree
+func (cursor *GTreeNode[T]) RebalanceAVL() {
+
+}
+
+func (cursor *GTreeNode[T]) calcDepthDiff() int {
+	var leftDepth int = 0
+	var rightDepth int = 0
+	if cursor.left != nil {
+		leftDepth = cursor.measureDepth()
+	}
+	if cursor.right != nil {
+		rightDepth = cursor.measureDepth()
+	}
+	return rightDepth - leftDepth
+}
+
+//  this function is useless
+func (cursor *GTreeNode[T]) CalcBalance() int {
+	// gap := cursor.left.measureDepth() - cursor.right.measureDepth()
+	// return gap
+	if cursor.depth != 0 {
+		return cursor.depth
+	}
+	var hasLeft, hasRight = cursor.hasChildren()
+	var leftDiff = 0
+	var rightDiff = 0
+	if hasLeft {
+		leftDiff = cursor.left.CalcBalance() + 1
+	}
+	if hasRight {
+		rightDiff = cursor.right.CalcBalance() + 1
+	}
+	fmt.Println("\n Balance at ", cursor.value, leftDiff, rightDiff, "is", rightDiff-leftDiff)
+	cursor.depth = rightDiff - leftDiff
+	return cursor.depth
 }
