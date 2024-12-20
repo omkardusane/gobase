@@ -42,7 +42,7 @@ func (cursor *GTreeNode[T]) Traverse(reader func(nodeValue T, idx int)) {
 	}
 }
 
-func (tree *BinaryTree[T]) BfsTraverse(reader func(nodeValue T, depth int)) {
+func (tree *BinaryTree[T]) BfsTraverse(reader func(nodeValue T, currentDepth int)) {
 	currentDepth := 0
 	maxDepth := 100
 	reader(tree.base.value, currentDepth)
@@ -215,8 +215,7 @@ func (cursor *GTreeNode[T]) RebalanceAVL() *GTreeNode[T] {
 	if diff > 1 {
 		// rotateLeft
 		cursor = cursor.rotateLeft()
-	}
-	if diff < -1 {
+	} else if diff < -1 {
 		// rotateRight
 		cursor = cursor.rotateRight()
 	}
@@ -227,11 +226,11 @@ func (cursor *GTreeNode[T]) RebalanceAVL() *GTreeNode[T] {
 	if hasRight {
 		cursor.right.RebalanceAVL()
 	}
-	// return cursor
+	return cursor
 }
 
 func (root *GTreeNode[T]) rotateLeft() *GTreeNode[T] {
-
+	return nil
 }
 
 func (root *GTreeNode[T]) rotateRight() *GTreeNode[T] {
