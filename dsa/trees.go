@@ -3,11 +3,12 @@ package dsa
 import "fmt"
 
 type GTreeNode[T any] struct {
-	value T
-	index int
-	depth int
-	left  *GTreeNode[T]
-	right *GTreeNode[T]
+	value  T
+	index  int
+	depth  int
+	Height int
+	left   *GTreeNode[T]
+	right  *GTreeNode[T]
 }
 
 type BinaryTree[T any] struct {
@@ -104,10 +105,10 @@ func (cursor *GTreeNode[T]) measureDepth() int {
 	var leftDepth int = 0
 	var rightDepth int = 0
 	if cursor.left != nil {
-		leftDepth = cursor.measureDepth()
+		leftDepth = cursor.left.measureDepth()
 	}
 	if cursor.right != nil {
-		rightDepth = cursor.measureDepth()
+		rightDepth = cursor.right.measureDepth()
 	}
 	if leftDepth > rightDepth {
 		depth += leftDepth
