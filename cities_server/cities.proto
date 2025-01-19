@@ -1,6 +1,6 @@
-
 syntax = "proto3";
 
+option go_package = "gobase_om/cities_server";
 package cities_server;
 
 // The greeting service definition.
@@ -21,7 +21,6 @@ message HelloReply {
 
 
 /*
-protoc --go_out=. --go_opt=paths=source_relative \
-    --go-grpc_out=. --go-grpc_opt=paths=source_relative \
-    .cities.proto
+go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
+protoc --go_out=. --go_opt=paths=source_relative     --go-grpc_out=. --go-grpc_opt=paths=source_relative ./cities.proto
 */
