@@ -69,9 +69,9 @@ func (node *AVLTreeNode[T]) rebalance() *AVLTreeNode[T] {
 }
 
 func (node *AVLTreeNode[T]) rotateLeft() *AVLTreeNode[T] {
-
+	return nil
 }
 
 func (node *AVLTreeNode[T]) rotateRight() *AVLTreeNode[T] {
-
+	return nil
 }
